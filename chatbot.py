@@ -8,8 +8,8 @@ Created on Mon Oct 22 22:54:01 2018
 
 # Import libraries
 import numpy as np
+import tensorflow as tf
 import re
-import time
 
 
 # Read Data
@@ -166,5 +166,77 @@ for length in range(1, 25 + 1):
         if len(i[1]) == length:
             sorted_clean_questions.append(questions_to_int[i[0]])
             sorted_clean_answers.append(answers_to_int[i[0]])
+
+
+"""
+                    Build Seq2Seq Model
+"""
+
+# Create tensorflow placeholders for input and targers
+# tf.placeholder(datatype, [dimension, dimension], name = "input")
+def model_inputs():
+    inputs = tf.placeholder(tf.int32, [None, None], name = "input")
+    targets = tf.placeholder(tf.int32, [None, None], name = "target")
+    learning_rate = tf.placeholder(tf.float32, name = "learning_rate")
+    keep_prob = tf.placeholder(tf.float32, name = "keep_prob")
+    return inputs, targets, learning_rate, keep_prob
+
+
+# Preprocess the targets
+def preprcess_targets(targets, word_occurance_dict, batch_size):
+    left_side = tf.fill([batch_size, 1], word_occurance_dict["<SOS>"])
+    
+    # batch_size = number of lines/columns
+    # take all except last column: batch size, -1
+    right_side = tf.strided_slice(targets, [0, 0], [batch_size, -1], [1, 1]) # extract a subset of a tensor
+    
+    preprocessed_targets = tf.concat([left_side, right_side], 1)
+    return preprocessed_targets
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
